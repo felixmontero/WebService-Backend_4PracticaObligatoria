@@ -1,24 +1,27 @@
 package com.esliceu.webservice.controllers;
 
+import com.esliceu.webservice.models.User;
 import com.esliceu.webservice.services.UserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
     @Autowired
     UserService userService;
-
+    @CrossOrigin
     @PostMapping("/login")
     public void login(@RequestParam String user, @RequestParam String password){
 
     }
 
     @PostMapping("/register")
-    public void register(@RequestParam String name, @RequestParam String email, @RequestParam String password, @RequestParam String role){
-        userService.register(name, email, password, role);
+    @CrossOrigin("http://localhost:3000")
+    public void register(@RequestBody User user){
+        User user2 = new User();
+        BeanUtils.copyProperties(user,user2);
+
     }
 }
