@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 @Entity
 public class User {
     @Id
-    private Long id;
+    private int id;
     @Column(name = "name")
     private String name;
     @Column(name = "email",unique = true)
@@ -49,11 +49,11 @@ public class User {
         this.role = role;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 

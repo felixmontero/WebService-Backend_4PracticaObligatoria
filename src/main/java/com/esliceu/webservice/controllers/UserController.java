@@ -22,6 +22,7 @@ public class UserController {
     public void register(@RequestBody User user){
         User user2 = new User();
         BeanUtils.copyProperties(user,user2);
+        userService.register(user2);
 
     }
 }

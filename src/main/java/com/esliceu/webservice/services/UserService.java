@@ -11,12 +11,8 @@ public class UserService {
     UserRepo userREPO;
 
 
-    public void register(String name, String email, String password, String role) {
-        User u = new User();
-        u.setName(name);
-        u.setEmail(email);
-        u.setPassword(password);
-        u.setRole(role);
-        userREPO.save(u);
+    public void register(User user) {
+        
+        userREPO.save(user);
     }
 }
