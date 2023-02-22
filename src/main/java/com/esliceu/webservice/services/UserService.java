@@ -12,7 +12,19 @@ public class UserService {
 
 
     public void register(User user) {
-        
+
         userREPO.save(user);
+    }
+
+    public boolean checkLogin(String email, String password) {
+        return userREPO.existsByEmailAndPassword(email,password);
+    }
+
+    public User findByEmail(String email) {
+        return userREPO.findByEmail(email);
+    }
+
+    public void changePassword(User user2) {
+
     }
 }

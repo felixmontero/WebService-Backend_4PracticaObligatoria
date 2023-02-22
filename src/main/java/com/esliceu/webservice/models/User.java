@@ -17,6 +17,17 @@ public class User {
     @Column(name = "role")
     private String role;
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
+                '}';
+    }
+
     public String getName() {
         return name;
     }

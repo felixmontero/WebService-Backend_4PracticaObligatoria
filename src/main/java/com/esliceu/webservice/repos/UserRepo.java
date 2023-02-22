@@ -7,4 +7,8 @@ import java.util.List;
 
 public interface UserRepo extends JpaRepository<User, Long> {
     User save(User user);
+
+    boolean existsByEmailAndPassword(String email, String password);
+
+    User findByEmail(String email);
 }
