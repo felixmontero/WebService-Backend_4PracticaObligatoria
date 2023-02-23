@@ -25,6 +25,7 @@ public class UserService {
     }
 
     public void changePassword(User user2) {
-
+        String password = user2.getPassword();
+        System.out.println(password);
     }
 }
