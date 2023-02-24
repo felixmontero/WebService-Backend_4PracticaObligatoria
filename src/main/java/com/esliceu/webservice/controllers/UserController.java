@@ -82,4 +82,13 @@ public class UserController {
         }
     }
 
+    @GetMapping("/getprofile")
+    public User getProfile(HttpServletRequest request){
+        String username = (String) request.getAttribute("user");
+        if(username != null || username != "") {
+            User user = userService.findByEmail(username);
+            return user;
+        }
+        return null;
+    }
 }
