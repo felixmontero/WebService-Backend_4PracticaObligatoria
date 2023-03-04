@@ -50,8 +50,6 @@ public class TokenService {
         userMap.put("permissions", permissionsMap);
 
 
-
-
         return JWT.create()
                 .withPayload(userMap)
                 .withExpiresAt(new Date(System.currentTimeMillis() + tokenExpiration))
@@ -63,5 +61,22 @@ public class TokenService {
                 .build()
                 .verify(token)
                 .getSubject();
+    }
+
+    public User getUserUser(String token) {
+        return JWT.require(Algorithm.HMAC512(tokenSecret.getBytes()))
+                .build()
+                .verify(token)
+                .getClaim("user")
+                .as(User.class);
+    }
+
+    public String getUserEmailFromToken(String token) {
+        return JWT.require(Algorithm.HMAC512(tokenSecret.getBytes()))
+                .build()
+                .verify(token)
+                .getClaim("email")
+                .asString();
+
     }
 }

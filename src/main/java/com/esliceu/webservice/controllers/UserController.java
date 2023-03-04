@@ -2,6 +2,7 @@ package com.esliceu.webservice.controllers;
 
 import com.esliceu.webservice.forms.ChangePasswordForm;
 import com.esliceu.webservice.forms.LoginForm;
+import com.esliceu.webservice.forms.ProfileForm;
 import com.esliceu.webservice.models.User;
 import com.esliceu.webservice.services.TokenService;
 import com.esliceu.webservice.services.UserService;
@@ -45,7 +46,7 @@ public class UserController {
    public Map<String, Object> login(@RequestBody LoginForm loginForm, HttpServletResponse response) {
 
        User user = userService.findByEmail(loginForm.getEmail());
-       if (user == null) {
+       if (user == null || userService.checkLogin(loginForm.getEmail(), loginForm.getPassword()) == false){
            Map<String, Object> map = new HashMap<>();
            map.put("message", "Wrong user or password");
            response.setStatus(400);
@@ -62,33 +63,120 @@ public class UserController {
        }
    }
 
-    @PostMapping("/register")
+    /*@PostMapping("/register")
     public void register(@RequestBody User user){
-        User user2 = new User();
-        BeanUtils.copyProperties(user,user2);
-        userService.register(user2);
+       if(!userService.userExists(user.getEmail())){
+           User user2 = new User();
+           BeanUtils.copyProperties(user, user2);
+           userService.register(user2);
+       }else{
+           throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"User already exists");
+       }
+    }*/
+    @PostMapping("/register")
+    public Map<String, String> register(@RequestBody User user){
 
-    }
-
-    @PutMapping("/profile/password")
-    public void changePassword(@RequestBody ChangePasswordForm changePasswordForm, HttpServletRequest request){
-        String username = (String) request.getAttribute("user");
-        if(username != null || username != "") {
-            String password = changePasswordForm.getNewPassword();
-            String password2 = changePasswordForm.getNewPassword2();
-            //BeanUtils.copyProperties(user, user2);
-            //userService.changePassword(user2);
+        Map<String, String> message = new HashMap<>();
+        if(!userService.userExists(user.getEmail())){
+            User user2 = new User();
+            BeanUtils.copyProperties(user, user2);
+            userService.register(user2);
+            message.put("message", "User already exists");
+        }else{
+            message.put("message", "User already exists");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"User already exists");
 
         }
+        return message;
     }
 
     @GetMapping("/getprofile")
-    public User getProfile(HttpServletRequest request){
+    public Object getProfile(HttpServletRequest request, HttpServletResponse response,@RequestHeader("Authorization") String token){
+        Map<String, Object> map = new HashMap<>();
+
+        token = token.replace("Bearer ","");
+        String email = tokenService.getUserEmailFromToken(token);
+        User user = userService.findByEmail(email);
+        Map<String, Object> userMap = new HashMap<>();
+        Map<String, Object> permissionsMap = new HashMap<>();
+
+        String[] permissions = new String[]{
+                "own_topics:write",
+                "own_topics:delete",
+                "own_replies:write",
+                "own_replies:delete",
+                "categories:write",
+                "categories:delete"
+        };
+
+        permissionsMap.put("permissions", permissions);
+
+        userMap.put("_id", user.getId());
+        userMap.put("email", user.getEmail());
+        userMap.put("name", user.getName());
+        userMap.put("avatarUrl", "");
+        userMap.put("__v", 0);
+        userMap.put("id", user.getId());
+        userMap.put("role", user.getRole());
+        userMap.put("permissions", permissionsMap);
+
+
+        return userMap;
+    }
+
+    @PutMapping("/profile")
+    public Map<String,Object> updateProfile(@RequestBody ProfileForm profileForm, HttpServletRequest request, HttpServletResponse response,
+                              @RequestHeader("Authorization") String token){
+
+        token = token.replace("Bearer ","");
+        String email = tokenService.getUserEmailFromToken(token);
+        User user = userService.findByEmail(email);
+        User user2 = userService.updateProfile(user, profileForm);
+
+        Map<String, Object> userMap = new HashMap<>();
+        Map<String, Object> permissionsMap = new HashMap<>();
+
+        String[] permissions = new String[]{
+                "own_topics:write",
+                "own_topics:delete",
+                "own_replies:write",
+                "own_replies:delete",
+                "categories:write",
+                "categories:delete"
+        };
+
+        permissionsMap.put("permissions", permissions);
+
+        userMap.put("_id", user2.getId());
+        userMap.put("email", user2.getEmail());
+        userMap.put("name", user2.getName());
+        userMap.put("avatarUrl", "");
+        userMap.put("__v", 0);
+        userMap.put("id", user2.getId());
+        userMap.put("role", user2.getRole());
+        userMap.put("permissions", permissionsMap);
+        //crate new map
+        Map<String, Object> map = new HashMap<>();
+        map.put("user", userMap);
+
+        return map;
+
+    }
+
+
+    @PutMapping("/profile/password")
+    public void changePassword(@RequestBody ChangePasswordForm changePasswordForm, HttpServletRequest request, HttpServletResponse response,
+                               @RequestHeader("Authorization") String token){
+        token = token.replace("Bearer ","");
+        String email = tokenService.getUserEmailFromToken(token);
+        User user = userService.findByEmail(email);
+        String newPassword = changePasswordForm.getNewPassword();
         String username = (String) request.getAttribute("user");
+        userService.changePassword(user, newPassword);
+
         if(username != null || username != "") {
-            User user = userService.findByEmail(username);
-            return user;
+
+
         }
-        return null;
     }
 }
