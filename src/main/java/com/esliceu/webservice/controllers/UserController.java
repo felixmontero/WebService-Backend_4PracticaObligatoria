@@ -3,7 +3,9 @@ package com.esliceu.webservice.controllers;
 import com.esliceu.webservice.forms.ChangePasswordForm;
 import com.esliceu.webservice.forms.LoginForm;
 import com.esliceu.webservice.forms.ProfileForm;
+import com.esliceu.webservice.modelView.UserView;
 import com.esliceu.webservice.models.User;
+import com.esliceu.webservice.services.CategoryService;
 import com.esliceu.webservice.services.TokenService;
 import com.esliceu.webservice.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +27,8 @@ public class UserController {
     UserService userService;
     @Autowired
     TokenService tokenService;
+    @Autowired
+    CategoryService categoryService;
 
    /* @PostMapping("/login")
     public Map<String,Object> login(@RequestBody LoginForm loginForm){
@@ -55,8 +59,24 @@ public class UserController {
            Map<String, Object> loginMap = new HashMap<>();
 
            String token = tokenService.newToken(loginForm.getEmail());
+           UserView userView = new UserView();
+           BeanUtils.copyProperties(user, userView);
+           Map<String, Object> permissionsMap = new HashMap<>();
 
-           loginMap.put("user", user);
+           String[] permissions = new String[]{
+                   "own_topics:write",
+                   "own_topics:delete",
+                   "own_replies:write",
+                   "own_replies:delete",
+                   "categories:write",
+                   "categories:delete"
+           };
+
+           permissionsMap.put("root", permissions);
+           permissionsMap.put("categories",categoryService.getCategories());
+           userView.setPermissions(permissionsMap);
+
+           loginMap.put("user", userView);
            loginMap.put("token", token);
            System.out.println(token);
            return loginMap;

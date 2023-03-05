@@ -1,22 +1,28 @@
-package com.esliceu.webservice.models;
+package com.esliceu.webservice.modelView;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
-@Entity
-public class User {
-    @Id
-    private int id;
-    @Column(name = "name")
-    private String name;
-    @Column(name = "email",unique = true)
-    private String email;
-    @Column(name = "password")
-    private String password;
-    @Column(name = "role")
-    private String role;
+import java.util.Map;
 
+
+public class UserView {
+
+    private int id;
+    private String name;
+    private String email;
+    private String password;
+    private String role;
+    private Map<String,Object> permissions;
+
+    public Map<String, Object> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(Map<String, Object> permissions) {
+        this.permissions = permissions;
+    }
 
     @Override
     public String toString() {
