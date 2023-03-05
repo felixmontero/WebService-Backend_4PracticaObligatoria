@@ -39,7 +39,7 @@ public class TokenService {
         };
 
         permissionsMap.put("permissions", permissions);
-
+        userMap.put("categories",new String[]{});
         userMap.put("_id", user.getId());
         userMap.put("email", user.getEmail());
         userMap.put("name", user.getName());

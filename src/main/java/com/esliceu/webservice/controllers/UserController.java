@@ -109,7 +109,7 @@ public class UserController {
                 "categories:delete"
         };
 
-        permissionsMap.put("permissions", permissions);
+        permissionsMap.put("root", permissions);
 
         userMap.put("_id", user.getId());
         userMap.put("email", user.getEmail());
