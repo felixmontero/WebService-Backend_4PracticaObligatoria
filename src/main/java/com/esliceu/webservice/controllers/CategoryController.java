@@ -2,7 +2,10 @@ package com.esliceu.webservice.controllers;
 
 import com.esliceu.webservice.forms.CreateCategoryForm;
 import com.esliceu.webservice.models.Category;
+import com.esliceu.webservice.models.Topic;
 import com.esliceu.webservice.services.CategoryService;
+import com.esliceu.webservice.services.TokenService;
+import com.esliceu.webservice.services.TopicService;
 import com.esliceu.webservice.utils.Utils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,7 +22,8 @@ import java.util.*;
 public class CategoryController {
     @Autowired
     CategoryService categoryService;
-
+    @Autowired
+    TopicService topicService;
     @GetMapping("/categories")
     public List<Category> getCategories(HttpServletResponse response){
        List<Category> categories = new ArrayList<>();
@@ -106,6 +110,15 @@ public class CategoryController {
     //delete
     @DeleteMapping("/categories/{slug}")
     public void deleteCategory(HttpServletResponse response, @PathVariable String slug){
+        Category category=  categoryService.getCategoryBySlug(slug);
+        List<Topic> topics = topicService.getTopicsByCategory(category);
+        for(Topic topic : topics){
+            if(topic.getCategory().getSlug().equals(slug)){
+
+                topicService.deleteTopic(topic.getId(),topic.getUser().getEmail());
+            }
+        }
         categoryService.removeCategory(slug);
+
     }
 }

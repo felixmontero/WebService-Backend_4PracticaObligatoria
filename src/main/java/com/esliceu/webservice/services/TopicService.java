@@ -56,9 +56,9 @@ public class TopicService {
     }
 
 
-    public Topic deleteTopic(String id, String email) {
+    public Topic deleteTopic(int id, String email) {
         User user = userService.findByEmail(email);
-        Topic topic = topicRepo.findById(Long.parseLong(id));
+        Topic topic = topicRepo.findById(id);
         topicRepo.delete(topic);
         return topic;
     }

@@ -27,8 +27,9 @@ public class CategoryService {
         return newCategory;
     }
     public int generateId(){
-
-           return categoryRepo.findAll().size()+1;
+        //obtener id de la ultima categoria y sumarle 1
+            int id= categoryRepo.findAll().stream().mapToInt(Category::getId).max().orElse(0);
+            return id+1;
 
 
     }

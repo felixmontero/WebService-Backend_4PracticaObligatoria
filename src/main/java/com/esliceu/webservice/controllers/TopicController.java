@@ -178,7 +178,7 @@ public class TopicController {
         Map<String, Object> map = new HashMap<>();
         token = token.replace("Bearer ","");
         String email = tokenService.getUserEmailFromToken(token);
-        Topic topic = topicService.deleteTopic(id, email);
+        Topic topic = topicService.deleteTopic(Integer.parseInt(id), email);
         User user = userService.findByEmail(email);
 
         if(topic == null){
