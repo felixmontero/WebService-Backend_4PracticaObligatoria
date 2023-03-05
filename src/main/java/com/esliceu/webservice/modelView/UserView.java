@@ -15,6 +15,7 @@ public class UserView {
     private String password;
     private String role;
     private Map<String,Object> permissions;
+    private int _id;
 
     public Map<String, Object> getPermissions() {
         return permissions;

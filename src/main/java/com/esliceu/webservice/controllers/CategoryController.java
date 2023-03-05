@@ -15,7 +15,7 @@ import java.net.http.HttpResponse;
 import java.util.*;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin
 public class CategoryController {
     @Autowired
     CategoryService categoryService;
@@ -25,7 +25,6 @@ public class CategoryController {
        List<Category> categories = new ArrayList<>();
        categories = categoryService.getCategories();
        //recorrer la lista de categorias y crear el objeto y añadirlo a una arraylist
-
 
        return categories;
     }
@@ -48,7 +47,6 @@ public class CategoryController {
         map2.put("moderators",new String[]{});
 
         return map2;
-
 
     }
 

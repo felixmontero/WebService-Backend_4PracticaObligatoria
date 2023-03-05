@@ -27,11 +27,9 @@ public class CategoryService {
         return newCategory;
     }
     public int generateId(){
-        if(categoryRepo.findAll().size()==0){
-            return 0;
-        }else {
-           return categoryRepo.findAll().size();
-        }
+
+           return categoryRepo.findAll().size()+1;
+
 
     }
 
@@ -45,5 +43,8 @@ public class CategoryService {
     public void removeCategory(String slug) {
         Category category = categoryRepo.findAll().stream().filter(c -> c.getSlug().equals(slug)).findFirst().orElse(null);
         categoryRepo.delete(category);
+    }
+    public Category getCategoryBySlug(String slug){
+        return categoryRepo.findAll().stream().filter(c -> c.getSlug().equals(slug)).findFirst().orElse(null);
     }
 }
