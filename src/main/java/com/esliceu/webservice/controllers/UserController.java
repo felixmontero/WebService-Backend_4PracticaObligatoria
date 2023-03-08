@@ -30,21 +30,6 @@ public class UserController {
     @Autowired
     CategoryService categoryService;
 
-   /* @PostMapping("/login")
-    public Map<String,Object> login(@RequestBody LoginForm loginForm){
-        Map<String, Object> map =  new HashMap<>();
-        String email = loginForm.getEmail();
-        String password = loginForm.getPassword();
-        if(userService.checkLogin(email,password)){
-            User user = userService.findByEmail(email);
-            String token = tokenService.newToken(user.toString());
-            map.put("token", token);
-            System.out.println(token);
-            map.put("token",token);
-            return map;
-        }
-        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Bad credentials");
-    }*/
    @PostMapping("/login")
    @CrossOrigin(origins = "http://localhost:8080")
    public Map<String, Object> login(@RequestBody LoginForm loginForm, HttpServletResponse response) {
