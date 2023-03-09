@@ -4,6 +4,7 @@ import com.esliceu.webservice.forms.ChangePasswordForm;
 import com.esliceu.webservice.forms.LoginForm;
 import com.esliceu.webservice.forms.ProfileForm;
 import com.esliceu.webservice.modelView.UserView;
+import com.esliceu.webservice.models.Category;
 import com.esliceu.webservice.models.User;
 import com.esliceu.webservice.services.CategoryService;
 import com.esliceu.webservice.services.TokenService;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -115,6 +117,19 @@ public class UserController {
         };
 
         permissionsMap.put("root", permissions);
+        List<Category> categories =  categoryService.getCategories();
+        for (Category category : categories) {
+            HashMap<String, Object> categoryMap = new HashMap<>();
+            String[] permissions2 = new String[]{
+                    "categories_replies:write",
+                    "categories_replies:delete",
+                    "categories_topics:write",
+                    "categories_topics:delete"
+            };
+            categoryMap.put(category.getSlug(), permissions2);
+            map.put("categories", categoryMap);
+        }
+        //permissionsMap.put("categories", );
 
         userMap.put("_id", user.getId());
         userMap.put("email", user.getEmail());
@@ -124,6 +139,7 @@ public class UserController {
         userMap.put("id", user.getId());
         userMap.put("role", user.getRole());
         userMap.put("permissions", permissionsMap);
+        userMap.put("iat",tokenService.getIat(token));
 
 
         return userMap;

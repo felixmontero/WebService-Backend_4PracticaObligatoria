@@ -79,4 +79,12 @@ public class TokenService {
                 .asString();
 
     }
+
+    public Object getIat(String token) {
+        return JWT.require(Algorithm.HMAC512(tokenSecret.getBytes()))
+                .build()
+                .verify(token)
+                .getClaim("iat")
+                .as(Object.class);
+    }
 }

@@ -19,13 +19,14 @@ public class TopicService {
     @Autowired
     CategoryService categoryService;
 
+
     public List<Topic> getTopicsByCategory(Category category) {
 
         return topicRepo.findAllByCategory(category);
     }
 
-    public Topic getTopicById(String id) {
-        return topicRepo.findById(Long.parseLong(id));
+    public Topic getTopicById(int id) {
+        return topicRepo.findById(id);
     }
 
     public Topic createTopic(String title, String content, String category, String email) {
@@ -59,6 +60,7 @@ public class TopicService {
     public Topic deleteTopic(int id, String email) {
         User user = userService.findByEmail(email);
         Topic topic = topicRepo.findById(id);
+
         topicRepo.delete(topic);
         return topic;
     }
