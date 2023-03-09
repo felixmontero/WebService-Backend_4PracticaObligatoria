@@ -186,7 +186,7 @@ public class UserController {
 
 
     @PutMapping("/profile/password")
-    public void changePassword(@RequestBody ChangePasswordForm changePasswordForm, HttpServletRequest request, HttpServletResponse response,
+    public Object changePassword(@RequestBody ChangePasswordForm changePasswordForm, HttpServletRequest request, HttpServletResponse response,
                                @RequestHeader("Authorization") String token){
         token = token.replace("Bearer ","");
         String email = tokenService.getUserEmailFromToken(token);
@@ -197,7 +197,12 @@ public class UserController {
 
         if(username != null || username != "") {
 
-
+            Map<String, Object> map = new HashMap<>();
+            map.put("message", "Password changed");
+            return map;
+        }
+        else{
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Wrong password");
         }
     }
 }
